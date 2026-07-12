@@ -90,25 +90,6 @@ function playTone(freq, duration = 0.32, type = "sine") {
   osc.stop(now + duration + 0.02);
 }
 
-function playWaveTone(duration = 0.4) {
-  const ctx = getAudioCtx();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = "sine";
-
-  const now = ctx.currentTime;
-  osc.frequency.setValueAtTime(220, now);
-  osc.frequency.linearRampToValueAtTime(660, now + duration);
-
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(0.22, now + 0.03);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-  osc.connect(gain).connect(ctx.destination);
-  osc.start(now);
-  osc.stop(now + duration + 0.02);
-}
-
 function playSuccessChime() {
   playTone(523.25, 0.16);
   setTimeout(() => playTone(659.25, 0.22), 140);
@@ -136,13 +117,9 @@ const DIFFICULTY = {
   hard: { startLevel: 4, flash: 320, gap: 220 },
 };
 
-const WAVE_UNLOCK_POSITION = 4; // wave steps can appear from the 5th step onward
-const WAVE_CHANCE = 0.3;
 const BEST_SCORE_KEY = "simonSaysBestScore";
 
 const padButtons = Array.from(document.querySelectorAll(".pad-btn"));
-const waveZone = document.getElementById("waveZone");
-const waveZoneLabel = waveZone.querySelector("span");
 const startBtn = document.getElementById("startBtn");
 const gameMessage = document.getElementById("gameMessage");
 const statLevel = document.getElementById("statLevel");
@@ -166,30 +143,14 @@ diffOptions.querySelectorAll(".diff-btn").forEach((btn) => {
   });
 });
 
-function generateStep(position) {
-  const canBeWave = position > WAVE_UNLOCK_POSITION;
-  if (canBeWave && Math.random() < WAVE_CHANCE) {
-    return { type: "wave" };
-  }
-  const color = COLOR_NAMES[Math.floor(Math.random() * COLOR_NAMES.length)];
-  return { type: "color", color };
+function randomColor() {
+  return COLOR_NAMES[Math.floor(Math.random() * COLOR_NAMES.length)];
 }
 
 function setMessage(text, variant) {
   gameMessage.textContent = text;
   gameMessage.classList.remove("nice", "over");
   if (variant) gameMessage.classList.add(variant);
-}
-
-function updateWaveZoneAvailability() {
-  const unlocked = sequence.length > WAVE_UNLOCK_POSITION;
-  if (unlocked) {
-    waveZoneLabel.textContent = "منطقة التلويح — مرّر بسرعة يمينًا أو يسارًا";
-    waveZone.style.opacity = "1";
-  } else {
-    waveZoneLabel.textContent = "تُفعَّل منطقة التلويح تلقائيًا بعد المستوى الرابع";
-    waveZone.style.opacity = "0.55";
-  }
 }
 
 function sleep(ms) {
@@ -201,24 +162,16 @@ async function playSequence() {
   setPadsEnabled(false);
   setMessage("راقب النمط...");
   const cfg = DIFFICULTY[difficulty];
-  updateWaveZoneAvailability();
 
   await sleep(500);
 
   for (let i = 0; i < sequence.length; i++) {
-    const step = sequence[i];
-    if (step.type === "color") {
-      const btn = padButtons.find((b) => b.dataset.color === step.color);
-      btn.classList.add("lit");
-      playTone(COLORS[step.color].freq, cfg.flash / 1000);
-      await sleep(cfg.flash);
-      btn.classList.remove("lit");
-    } else {
-      waveZone.classList.add("active");
-      playWaveTone(cfg.flash / 1000);
-      await sleep(cfg.flash);
-      waveZone.classList.remove("active");
-    }
+    const color = sequence[i];
+    const btn = padButtons.find((b) => b.dataset.color === color);
+    btn.classList.add("lit");
+    playTone(COLORS[color].freq, cfg.flash / 1000);
+    await sleep(cfg.flash);
+    btn.classList.remove("lit");
     await sleep(cfg.gap);
   }
 
@@ -237,7 +190,7 @@ function startGame() {
   sequence = [];
   const cfg = DIFFICULTY[difficulty];
   for (let i = 1; i <= cfg.startLevel; i++) {
-    sequence.push(generateStep(i));
+    sequence.push(randomColor());
   }
   startBtn.style.display = "none";
   statLevel.textContent = sequence.length;
@@ -256,7 +209,7 @@ function handleCorrectStep() {
     playSuccessChime();
 
     setTimeout(() => {
-      sequence.push(generateStep(sequence.length + 1));
+      sequence.push(randomColor());
       statLevel.textContent = sequence.length;
       playSequence();
     }, 900);
@@ -266,7 +219,6 @@ function handleCorrectStep() {
 function endGame() {
   state = "gameover";
   setPadsEnabled(false);
-  waveZone.classList.remove("active");
   playGameOverTone();
 
   const finalScore = Math.max(sequence.length - 1, 0);
@@ -295,7 +247,7 @@ padButtons.forEach((btn) => {
     playTone(COLORS[btn.dataset.color].freq, 0.25);
     setTimeout(() => btn.classList.remove("lit"), 180);
 
-    if (expected.type === "color" && expected.color === btn.dataset.color) {
+    if (expected === btn.dataset.color) {
       handleCorrectStep();
     } else {
       handleWrongStep();
@@ -303,35 +255,4 @@ padButtons.forEach((btn) => {
   });
 });
 
-/* ---- Wave swipe detection (pointer events: mouse + touch) ---- */
-let waveStart = null;
-
-waveZone.addEventListener("pointerdown", (e) => {
-  waveStart = { x: e.clientX, t: performance.now() };
-});
-
-waveZone.addEventListener("pointerup", (e) => {
-  if (!waveStart) return;
-  const dx = e.clientX - waveStart.x;
-  const dt = performance.now() - waveStart.t;
-  waveStart = null;
-
-  const isSwipe = Math.abs(dx) > 40 && dt < 700;
-  if (!isSwipe) return;
-  if (state !== "input") return;
-
-  const expected = sequence[playerIndex];
-  waveZone.classList.add("success");
-  setTimeout(() => waveZone.classList.remove("success"), 200);
-
-  if (expected.type === "wave") {
-    playWaveTone(0.25);
-    handleCorrectStep();
-  } else {
-    handleWrongStep();
-  }
-});
-
 startBtn.addEventListener("click", startGame);
-
-updateWaveZoneAvailability();

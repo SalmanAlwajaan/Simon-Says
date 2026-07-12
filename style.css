@@ -317,7 +317,7 @@ button{ font-family: inherit; cursor: pointer; border: none; }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  margin-bottom: 26px;
+  margin-bottom: 20px;
 }
 .dbtn{
   aspect-ratio: 1;
@@ -329,18 +329,6 @@ button{ font-family: inherit; cursor: pointer; border: none; }
 .dbtn-blue{ background: #4C8CFF; }
 .dbtn-yellow{ background: #FFD34D; }
 
-.device-eyes{
-  display: flex;
-  justify-content: center;
-  gap: 26px;
-  margin-bottom: 16px;
-}
-.eye{
-  width: 30px; height: 30px;
-  border: 3px solid var(--teal);
-  border-radius: 50%;
-  background: rgba(63,224,200,0.08);
-}
 .device-label{
   text-align: center;
   color: rgba(255,255,255,0.85);
@@ -558,40 +546,8 @@ button{ font-family: inherit; cursor: pointer; border: none; }
 .game-message.nice{ background: var(--teal); color: var(--ink); }
 .game-message.over{ background: #FF5A52; color: var(--white); }
 
-.wave-zone{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 16px;
-  border-radius: var(--radius-sm);
-  border: 2px dashed rgba(255,255,255,0.35);
-  color: rgba(255,255,255,0.7);
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 22px;
-  transition: border-color .2s ease, color .2s ease, background .2s ease;
-  touch-action: none;
-  user-select: none;
-}
-.wave-icon{ width: 20px; height: 20px; flex-shrink: 0; }
-.wave-zone.active{
-  border-color: var(--teal);
-  color: var(--teal);
-  background: rgba(63,224,200,0.1);
-  animation: pulseWave 1s infinite;
-}
-.wave-zone.success{
-  border-color: var(--teal);
-  background: var(--teal);
-  color: var(--ink);
-}
-@keyframes pulseWave{
-  0%, 100%{ box-shadow: 0 0 0 0 rgba(63,224,200,0.4); }
-  50%{ box-shadow: 0 0 0 10px rgba(63,224,200,0); }
-}
-
 .difficulty-row{
+  margin-top: 22px;
   display: flex;
   align-items: center;
   gap: 14px;
