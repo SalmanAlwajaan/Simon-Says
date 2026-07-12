@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simon Says — مشروع الأنظمة المدمجة | أكاديمية طويق</title>
+<meta name="description" content="Simon Says: لعبة ذاكرة تفاعلية مبنية على متحكم ESP32 — أضواء، نغمات، شاشة ناطقة، ومستشعر إيماءات.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&family=Noto+Sans+Arabic:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== Decorative pixel squares (global) ===== -->
+<div class="pixel-field" aria-hidden="true">
+  <span class="pixel p1"></span>
+  <span class="pixel p2"></span>
+  <span class="pixel p3"></span>
+  <span class="pixel p4"></span>
+  <span class="pixel p5"></span>
+  <span class="pixel p6"></span>
+</div>
+
+<!-- ===== Navigation ===== -->
+<header class="site-nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="#hero" class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">Simon Says</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#hero">الرئيسية</a>
+      <a href="#about">عن المشروع</a>
+      <a href="#components">المكوّنات</a>
+      <a href="#how">كيف تُلعب</a>
+      <a href="#play">العب الآن</a>
+      <a href="#team">الفريق</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ===== 1) Hero ===== -->
+<section id="hero" class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy reveal">
+      <p class="eyebrow">مشروع الأنظمة المدمجة — أكاديمية طويق</p>
+      <h1 class="hero-title">SIMON <span>SAYS</span></h1>
+      <p class="hero-subtitle">
+        لعبة ذاكرة تفاعلية مبنية على متحكم ESP32: أضواء ونغمات وشاشة ناطقة ومستشعر إيماءات
+      </p>
+      <div class="hero-actions">
+        <a href="#play" class="btn btn-primary">جرّب اللعبة الآن</a>
+        <a href="#about" class="btn btn-ghost">تعرّف على المشروع</a>
+      </div>
+    </div>
+
+    <div class="hero-device reveal" aria-hidden="true">
+      <div class="device">
+        <div class="device-screen">
+          <span class="screen-text">SIMON SAYS</span>
+          <span class="screen-dot"></span>
+        </div>
+        <div class="device-buttons">
+          <span class="dbtn dbtn-red"></span>
+          <span class="dbtn dbtn-green"></span>
+          <span class="dbtn dbtn-blue"></span>
+          <span class="dbtn dbtn-yellow"></span>
+        </div>
+        <div class="device-eyes">
+          <span class="eye"></span>
+          <span class="eye"></span>
+        </div>
+        <div class="device-label">ESP32 · Simon Says</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-fade" aria-hidden="true"></div>
+</section>
+
+<!-- ===== 2) About ===== -->
+<section id="about" class="section about">
+  <div class="section-inner">
+    <span class="pixel-tag reveal">عن المشروع</span>
+    <h2 class="section-title reveal">ذاكرة كلاسيكية… بروح جديدة</h2>
+    <p class="section-lead reveal">
+      يعيد مشروعنا بناء لعبة Simon الكلاسيكية الشهيرة بلمسة عصرية بالكامل، باستخدام متحكم
+      <strong>ESP32</strong> كعقل مدبّر للعبة. شاشة <strong>OLED ناطقة</strong> ترشدك خلال كل خطوة،
+      ولكل لون نغمة <strong>Buzzer</strong> مميّزة به وحده، بالإضافة إلى قوائم لاختيار
+      <strong>نمط اللعب</strong> و<strong>مستوى الصعوبة</strong> قبل أن تبدأ.
+    </p>
+    <p class="section-lead reveal">
+      لكن المفاجأة الحقيقية تنتظرك بعد المستوى الرابع: يستيقظ <strong>مستشعر الموجات فوق الصوتية</strong>
+      فجأة ويتحوّل إلى "زر خفي خامس" — تُجيب عليه بتلويحة يد بسيطة في الهواء، فتتحول اللعبة من مجرد
+      ضغط أزرار إلى اختبار حقيقي لسرعة بديهتك وتركيزك.
+    </p>
+
+    <div class="about-highlights">
+      <div class="highlight-card reveal">
+        <div class="hi-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h8M8 12h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>شاشة ناطقة</h3>
+        <p>تعليمات ورسائل حيّة على OLED ترافقك من التشغيل حتى انتهاء الجولة.</p>
+      </div>
+      <div class="highlight-card reveal">
+        <div class="hi-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v6M12 15v6M4 12H2M22 12h-2M6 6l1.5 1.5M18 6l-1.5 1.5M6 18l1.5-1.5M18 18l-1.5-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+        </div>
+        <h3>نغمة لكل لون</h3>
+        <p>أربع نغمات مختلفة تربط الصوت بالذاكرة البصرية وتقوّي تحدي التذكّر.</p>
+      </div>
+      <div class="highlight-card reveal">
+        <div class="hi-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12c2-4 4-6 8-6s6 2 8 6c-2 4-4 6-8 6s-6-2-8-6Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
+        </div>
+        <h3>الزر الخفي الخامس</h3>
+        <p>بعد المستوى 4 يستيقظ مستشعر الإيماءات ويضيف تحديًا جديدًا كليًا.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3) Components ===== -->
+<section id="components" class="section components">
+  <div class="section-inner">
+    <span class="pixel-tag reveal">المكوّنات</span>
+    <h2 class="section-title reveal">من الداخل: قلب الجهاز</h2>
+    <p class="section-lead reveal">كل قطعة في هذا الجهاز اختيرت بعناية لتُخرج تجربة لعب سلسة وموثوقة.</p>
+
+    <div class="components-grid">
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="5" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>ESP32 DevKit V1</h3>
+        <p>عقل المشروع — يدير المنطق، الأصوات، الشاشة، والمستشعر في آنٍ واحد.</p>
+      </div>
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+        </div>
+        <h3>4 أزرار ضغط</h3>
+        <p>أزرار يدوية لإدخال تتابع الألوان في وضع اللعب الكلاسيكي.</p>
+      </div>
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>4 مؤشرات LED + مقاومات 220Ω</h3>
+        <p>إضاءة واضحة لكل لون مع مقاومات حماية لتيار مضبوط وآمن.</p>
+      </div>
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-7 4 14 2-7h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Buzzer سلبي (Passive)</h3>
+        <p>يولّد نغمة مختلفة لكل لون، ويعزف أصوات الفوز والخسارة.</p>
+      </div>
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 21h8M12 18v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>شاشة OLED (I2C · مكتبة U8g2)</h3>
+        <p>تعرض الرسائل، القوائم، والنتائج بوضوح خلال جلسة اللعب بالكامل.</p>
+      </div>
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12c2-4 4-6 8-6s6 2 8 6c-2 4-4 6-8 6s-6-2-8-6Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
+        </div>
+        <h3>مستشعر HC-SR04 (5V)</h3>
+        <p>مستشعر الموجات فوق الصوتية — يستيقظ بعد المستوى 4 ليصبح الزر الخفي.</p>
+      </div>
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>بطارية 3.7V LiPo + شاحن USB-C + محوّل 5V</h3>
+        <p>طاقة قابلة لإعادة الشحن تمنح الجهاز استقلالية تامة عن الأسلاك.</p>
+      </div>
+
+      <div class="comp-card reveal">
+        <div class="comp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5 12 14l4-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>مفتاح تشغيل + هيكل مطبوع ثلاثي الأبعاد (أحمر)</h3>
+        <p>غلاف مطبوع بتقنية الطباعة ثلاثية الأبعاد يحمي الإلكترونيات ويمنح الجهاز هويته الحمراء المميزة.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4) How it plays ===== -->
+<section id="how" class="section how">
+  <div class="section-inner">
+    <span class="pixel-tag reveal">كيف تُلعب</span>
+    <h2 class="section-title reveal">من التشغيل إلى النتيجة</h2>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>مقدمة متحركة</h3>
+        <p>عند التشغيل، تُرحّب الشاشة بك برسوم وأضواء تمهيدية قبل بدء اللعبة.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <h3>اختر النمط</h3>
+        <p><strong>أحمر / أزرق</strong> = وضع يتضمن المستشعر. <strong>أخضر / أصفر</strong> = وضع الأزرار فقط.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <h3>اختر الصعوبة</h3>
+        <p><strong>سهل / عادي / صعب</strong> يحدّد مستوى البداية وسرعة عرض التتابع.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <h3>راقب النمط</h3>
+        <p>تُضيء الألوان بالترتيب مصحوبة بنغماتها — راقب وركّز جيدًا.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">05</div>
+        <h3>دورك الآن</h3>
+        <p>كرّر نفس التتابع بالضغط على الأزرار بنفس الترتيب تمامًا.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">06</div>
+        <h3>الزر الخفي يستيقظ</h3>
+        <p>بعد المستوى 4 تكتب الشاشة "SENSOR ON! Place your hand" — لوّح بيدك عند ظهور خطوة الموجة.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">07</div>
+        <h3>خطأ واحد ينهي الجولة</h3>
+        <p>أي ضغطة أو تلويحة خاطئة تنهي اللعبة فورًا وتُعرض نتيجتك النهائية.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">08</div>
+        <h3>تشغيل وإطفاء</h3>
+        <p>اضغط مطوّلًا على <strong>أحمر + أصفر</strong> لإطفاء الجهاز، و<strong>أخضر</strong> لإيقاظه من جديد.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5) Play now ===== -->
+<section id="play" class="section play">
+  <div class="section-inner">
+    <span class="pixel-tag reveal">العب الآن</span>
+    <h2 class="section-title reveal">جرّب Simon Says في متصفحك</h2>
+    <p class="section-lead reveal">نفس فكرة الجهاز، بين يديك الآن — راقب، تذكّر، وكرّر.</p>
+
+    <div class="game-wrap reveal">
+
+      <div class="game-panel">
+
+        <div class="game-status">
+          <div class="stat-box">
+            <span class="stat-label">المستوى</span>
+            <span class="stat-value" id="statLevel">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">أفضل نتيجة</span>
+            <span class="stat-value" id="statBest">0</span>
+          </div>
+        </div>
+
+        <div class="game-board">
+          <div class="game-pad" id="gamePad">
+            <button class="pad-btn pad-red" data-color="red" aria-label="أحمر"></button>
+            <button class="pad-btn pad-green" data-color="green" aria-label="أخضر"></button>
+            <button class="pad-btn pad-blue" data-color="blue" aria-label="أزرق"></button>
+            <button class="pad-btn pad-yellow" data-color="yellow" aria-label="أصفر"></button>
+          </div>
+          <div class="game-center">
+            <div class="game-message" id="gameMessage">اختر الصعوبة وابدأ</div>
+            <button class="btn btn-primary game-start" id="startBtn">ابدأ اللعبة</button>
+          </div>
+        </div>
+
+        <div class="wave-zone" id="waveZone" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" class="wave-icon"><path d="M3 12c2-4 4-6 9-6s7 2 9 6c-2 4-4 6-9 6s-7-2-9-6Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span>منطقة التلويح — مرّر بسرعة يمينًا أو يسارًا</span>
+        </div>
+
+        <div class="difficulty-row">
+          <span class="diff-label">الصعوبة:</span>
+          <div class="diff-options" id="diffOptions">
+            <button class="diff-btn active" data-diff="easy">سهل</button>
+            <button class="diff-btn" data-diff="normal">عادي</button>
+            <button class="diff-btn" data-diff="hard">صعب</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6) Team ===== -->
+<section id="team" class="section team">
+  <div class="section-inner">
+    <span class="pixel-tag reveal">الفريق</span>
+    <h2 class="section-title reveal">صنّاع المشروع</h2>
+    <p class="section-lead reveal">امسح رمز QR للوصول إلى الملف الشخصي على LinkedIn.</p>
+
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar" aria-hidden="true">أ.ف</div>
+        <h3>أحمد الفارس</h3>
+        <div class="qr-box" id="qr-ahmad"></div>
+        <a class="linkedin-link" href="https://www.linkedin.com/in/ahmad-alfares-8520b71b1" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar" aria-hidden="true">ش.ف</div>
+        <h3>شيهان بن فاهدة</h3>
+        <div class="qr-box" id="qr-shihan"></div>
+        <a class="linkedin-link" href="https://www.linkedin.com/in/shihan-bin-fahidah-b17455352" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar" aria-hidden="true">س.و</div>
+        <h3>سلمان الوجعان</h3>
+        <div class="qr-box" id="qr-salman"></div>
+        <a class="linkedin-link" href="https://www.linkedin.com/in/salwajaan" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p>مشروع الأنظمة المدمجة — أكاديمية طويق © <span id="year"></span></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
